@@ -1,7 +1,9 @@
 # Learn ONNX from scratch
 ⚠️本项目是基于韩博的[tensorrt_starter](https://github.com/kalfazed/tensorrt_starter)，增加了大量案例和注解
+
 🥰代表一些知识点的简介，🚀代表实战案例，❗代表一些tips
 
+still work in progress!!!还在施工中!!!
 ## ONNX部分
 
 1. [1.generate-onnx](1.generate-onnx)初步尝试：导出三个简单的onnx模型(两个输出头|动态shape) 
