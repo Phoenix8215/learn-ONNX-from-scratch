@@ -23,18 +23,17 @@ graph = gs.import_onnx(onnx.load("model.onnx"))
 
 fake_node = [node for node in graph.nodes if node.op == "FakeNodeToRemove"][0]
 
-# Get the input node of the fake node
-# Node provides i() and o() functions that can optionally be provided an index (default is 0)
-# These serve as convenience functions for the alternative, which would be to fetch the input/output
-# tensor first, then fetch the input/output node of the tensor.
-# For example, node.i() is equivalent to node.inputs[0].inputs[0]
+# 获取fake节点的输入节点
+# Node 提供了 i() 和 o() 函数，参数可以是索引（默认是0）
+# 这些函数提供了方便的方式，替代先获取输入/输出张量，再获取张量的输入/输出节点的传统方法。
+# 例如，node.i() 等价于 node.inputs[0].inputs[0]
 inp_node = fake_node.i()
 
-# Reconnect the input node to the output tensors of the fake node, so that the first identity
-# node in the example graph now skips over the fake node.
+# 将输入节点重新连接到fake节点的输出张量，这样示例图中的第一个Identity节点就可以跳过fake节点。
 inp_node.outputs = fake_node.outputs
 fake_node.outputs.clear()
 
-# Remove the fake node from the graph completely
+# 将fake节点从图中完全移除
 graph.cleanup()
 onnx.save(gs.export_onnx(graph), "removed.onnx")
+

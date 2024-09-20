@@ -1,48 +1,42 @@
-# Folding Constants
-
-## Introduction
 
 
-Constant folding involves pre-computing expressions that do not depend on runtime
-information. Practically, this would mean that any nodes that are dependent only on
-`Constant`s in an ONNX GraphSurgeon graph can be folded.
+# 常量折叠
 
-**One limitation of ONNX GraphSurgeon's built-in constant folding is that it will not**
-**rotate nodes.(没有交换律) So, assuming `x` is a graph input and `c0`, `c1` and `c2` are constants in**
-**the graph:**
+## 概述
 
-- `x + (c0 + (c1 + c2))` **will** be folded
-- `((x + c0) + c1) + c2` will **not** be folded, even though this is mathematically equivalent
-  (when not considering floating point rounding error) to the previous expression.
+常量折叠是指预先计算不依赖于运行时的表达式。这意味着 ONNX GraphSurgeon 图中，所有仅依赖常量 `Constant` 的节点都可以被折叠成更简单的表达式。
 
-## Prerequisites
+**ONNX GraphSurgeon 的常量折叠功能有一个局限：它不会重新排列节点顺序（即不具备交换律）。假设 `x` 是图的输入，`c0`、`c1` 和 `c2` 是图中的常量：**
 
-1. ONNX GraphSurgeon uses [ONNX Runtime](https://github.com/microsoft/onnxruntime) to
-   evaluate the constant expressions in the graph. This can be installed with:
+- `x + (c0 + (c1 + c2))` **可以**被折叠
+- `((x + c0) + c1) + c2` **无法**被折叠，尽管它与前者在数学上是等价的（如果不考虑浮点运算的舍入误差）。
+
+## 准备工作
+
+1. ONNX GraphSurgeon 使用 [ONNX Runtime](https://github.com/microsoft/onnxruntime) 来计算图中的常量表达式，可以通过以下命令安装：
    ```bash
    python3 -m pip install onnxruntime
    ```
 
-## Running the example
+## 示例运行步骤
 
-1. Generate a model with several nodes and save it to `model.onnx` by running:
+1. 通过运行以下命令生成包含多个节点的模型，并将其保存为 `model.onnx`：
 
    ```bash
    python3 generate.py
    ```
-   The generated model computes `output = input + ((a + b) + d)` where `a`,`b`, and `d` are constants
-   all set to `1`:
+   生成的模型执行计算 `output = input + ((a + b) + d)`，其中 `a`、`b` 和 `d` 均为值为 `1` 的常量：
 
    ![../resources/05_model.onnx.png](../resources/05_model.onnx.png)
-2. Fold constants in the graph, and save it to `folded.onnx` by running:
+
+2. 折叠图中的常量，并通过以下命令将其保存为 `folded.onnx`：
 
    ```bash
    python3 fold.py
    ```
-   This will replace the expression: `((a + b) + d)` with a single constant tensor (which will be all `3`s).
-   The resulting graph will compute `output = input + e` where `e = ((a + b) + d)`:
+   这将把表达式 `((a + b) + d)` 折叠为一个常量张量（值为 `3`）。折叠后的图计算公式为 `output = input + e`，其中 `e = ((a + b) + d)`：
 
-   This script will also display the help output for `Graph.fold_constants()`
+   此脚本还会显示 `Graph.fold_constants()` 方法的帮助信息。
 
    ![../resources/05_folded.onnx.png](../resources/05_folded.onnx.png)
 

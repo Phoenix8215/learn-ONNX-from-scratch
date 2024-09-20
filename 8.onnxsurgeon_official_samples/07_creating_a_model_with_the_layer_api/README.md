@@ -1,42 +1,39 @@
-# Creating A Model Using The Graph Layer API
 
-## Introduction
 
-This example uses the `Graph.layer()` function in conjunction with `Graph.register()` to
-demonstrate **how to construct complicated ONNX models more easily.**
+# 使用 Graph 层 API 构建模型
 
-**The `Graph.layer()` API allows you to more easily add `Node`s to a `Graph`. In addition to**
-**creating nodes, this function can also create the input and output tensors, and automatically**
-**insert the node in the graph. For details, see the `help` output for `Graph.layer()`.**
+## 概述
 
-**Note**: You still need to set `Graph` inputs and outputs yourself!
+此示例结合使用 `Graph.layer()` 函数与 `Graph.register()`，展示了**如何简化复杂 ONNX 模型的构建**。
 
-`Graph.layer()` can be used to implement your own functions that can be registered with `Graph.register()`.
-For example, to implement a `graph.add` function that inserts an "Add" operation into the graph, you could write:
+**通过 `Graph.layer()` API，你可以更方便地向 `Graph` 中添加节点（Node）。** 该函数不仅能创建节点，还能生成输入和输出张量，并自动插入到图中。详情可查看 `Graph.layer()` 的帮助文档。
+
+**提示**：你仍需要手动设置 `Graph` 的输入和输出。
+
+你还可以使用 `Graph.layer()` 编写自定义函数，并通过 `Graph.register()` 注册。例如，编写如下函数以在图中插入一个 "Add" 操作：
 ```python
 @gs.Graph.register()
 def add(self, a, b):
     return self.layer(op="Add", inputs=[a, b], outputs=["add_out"])
 ```
 
-and invoke it like so:
+然后可以像这样调用：
 ```python
 [Y] = graph.add(*graph.add(X, B), C)
 ```
 
-This would add a set of nodes which compute `Y = (X + B) + C` (assuming X, B, C are some tensors in the graph)
-to the graph **without requiring you to manually create the intermediate tensors involved.**
+这段代码将在图中添加一组节点，计算 `Y = (X + B) + C`（假设 `X`、`B` 和 `C` 是图中的张量），**无需手动创建中间张量**。
 
-## Running the example
+## 示例运行步骤
 
-1. Generate a moderately complex model and save it to `model.onnx` by running:
+1. 运行以下命令生成一个中等复杂的模型，并保存为 `model.onnx`：
     ```bash
     python3 generate.py
     ```
 
-    This script will also display the help output for `Graph.layer()`
+    此脚本还会展示 `Graph.layer()` 的帮助信息。
 
-    The generated model will look like this:
+    生成的模型如下：
 
     ![../resources/07_model.onnx.png](../resources/07_model.onnx.png)
 

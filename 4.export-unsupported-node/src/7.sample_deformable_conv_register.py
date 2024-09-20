@@ -46,6 +46,12 @@ def dcn_symbolic(
 
 register_custom_op_symbolic("torchvision::deform_conv2d", dcn_symbolic, 12)
 
+'''
+特别是像 DeformConv2d 这样复杂的算子，可能需要底层的硬件优化来实现，
+因此只定义符号，然后在推理引擎（例如ONNX Runtime或TensorRT）中使用自定义插件来执行实际的计算。
+在这种情况下，导出模型时，ONNX模型中会包含 custom::deform_conv2d，
+但ONNX本身并不具备这个算子的实现，推理时需要一个自定义插件来执行这个算子。
+'''
 
 class Model(torch.nn.Module):
     def __init__(self):

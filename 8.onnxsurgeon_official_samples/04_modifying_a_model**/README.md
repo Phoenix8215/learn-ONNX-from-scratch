@@ -1,38 +1,37 @@
-# Modiyfing A Model
 
-## Introduction
 
-This example first generates a basic model,
-then modifies the resulting model in various ways.
+# 修改 ONNX 模型
 
-By importing an ONNX graph into the [ONNX GraphSurgeon IR](../../README.md#ir), it is
-possible to modify virtually every aspect of the graph.
-We can then export the modified IR back to ONNX.
+## 概述
 
-## Running the example
+该示例展示了如何生成一个基本模型，并通过各种方式对模型进行修改。
 
-1. Generate a model with several nodes and save it to `model.onnx` by running:
+通过将 ONNX 图导入ONNX GraphSurgeon IR，我们可以对图中的各个元素进行修改，最后将修改后的 IR 重新导出为 ONNX 模型。
+
+## 示例运行步骤
+
+1. 生成包含多个节点的模型，并将其保存为 `model.onnx`，命令如下：
     ```bash
     python3 generate.py
     ```
 
-    The generated model computes `Y = x0 + (a * x1 + b)`:
+    生成的模型计算公式为 `Y = x0 + (a * x1 + b)`：
 
     ![../resources/04_model.onnx.png](../resources/04_model.onnx.png)
 
-2. Modify the model in various ways, and save it to `modified.onnx` by running:
+2. 对模型进行多种方式的修改，并将其保存为 `modified.onnx`，命令如下：
     ```bash
     python3 modify.py
     ```
 
-    This script does the following:
-    - Removes the `b` input of the first `Add` node
-    - Changes the first `Add` to a `LeakyRelu`
-    - Adds an `Identity` node after the first `Add`
-    - Changes the output of the graph to be the output of the `Identity` node
-    - Runs `cleanup()` which removes the `x0` tensor and second `Add` node due to the previous change to the graph outputs.
+    该脚本的主要修改如下：
+    - 移除第一个 `Add` 节点的 `b` 输入
+    - 将第一个 `Add` 操作替换为 `LeakyRelu`
+    - 在第一个 `Add` 之后插入 `Identity` 节点
+    - 将模型的输出更改为 `Identity` 节点的输出
+    - 运行 `cleanup()`，清理由于输出修改而未使用的 `x0` 张量和第二个 `Add` 节点。
 
-    The resulting graph computes `identity_out = leaky_relu(a * x1)`:
+    修改后的模型计算结果为 `identity_out = leaky_relu(a * x1)`：
 
     ![../resources/04_modified.onnx.png](../resources/04_modified.onnx.png)
 

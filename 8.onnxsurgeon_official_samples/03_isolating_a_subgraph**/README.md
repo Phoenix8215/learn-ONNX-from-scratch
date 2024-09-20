@@ -1,34 +1,35 @@
-# Isolating A Subgraph
 
-## Introduction
 
-This example first generates a basic model,then extracts a subgraph from this model.
+# 子图隔离
 
-**Isolating a subgraph from a model is as simple as modifying the inputs and**
-**outputs of the graph, running `graph.cleanup()`, and then re-exporting the graph.**
+## 概述
 
-We do **not** need to know which nodes, initializers, or intermediate tensors we
-want - marking the inputs and outputs is sufficient for ONNX GraphSurgeon to be able
-to determine the other information automatically.
+该示例首先生成一个基本模型，然后从中提取一个特定的子图。
 
-## Running the example
+**要从模型中隔离子图，只需调整输入输出，**
+**执行 `graph.cleanup()` 清理图表后，再重新导出即可。**
 
-1. Generate a model with several nodes and save it to `model.onnx` by running:
+我们**不需要**预先知道具体的节点、初始化器或中间张量——只需标记输入和输出，ONNX GraphSurgeon 会自动推断其他细节。
+
+## 示例运行步骤
+
+1. 运行以下命令，生成一个包含多个节点的模型，并保存为 `model.onnx`：
 
    ```bash
    python3 generate.py
    ```
 
-   The generated model computes `Y = x0 + (a * x1 + b)`:
+   生成的模型将执行计算 `Y = x0 + (a * x1 + b)`：
 
    ![../resources/03_model.onnx.png](../resources/03_model.onnx.png)
-2. Isolate the subgraph that computes `(a * x1 + b)` and save it to `subgraph.onnx` by running:
+
+2. 隔离子图 `(a * x1 + b)`，并将其保存为 `subgraph.onnx`，运行命令如下：
 
    ```bash
    python3 isolate.py
    ```
 
-   The resulting model computes `add_out = (a * x1 + b)`:
+   生成的子模型将执行计算 `add_out = (a * x1 + b)`：
 
    ![../resources/03_subgraph.onnx.png](../resources/03_subgraph.onnx.png)
 

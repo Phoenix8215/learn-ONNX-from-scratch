@@ -1,24 +1,38 @@
-# Shape Operations With The Layer API
 
-## Introduction
 
-This example uses the layer API outlined in [example 07](../07_creating_a_model_with_the_layer_api/)
-**to create a model that implements shape operations on inputs with dynamic shapes.**
+# 使用 Layer API 进行形状变换
 
-Specifically, two common cases are outlined:
+## 概述
 
-1. Flattening an input tensor that includes dynamic dimensions. The layers involved are:
-    - `Shape`: to get the input shape.
-    - `ReduceProd`: to compute the volume of the input shape.
-    - `Reshape`: to change the shape of the input to its volume.
+本示例使用 [示例 07](../07_creating_a_model_with_the_layer_api/) 中的 Layer API **构建了一个能够对动态形状输入进行形状操作的模型**。
 
-2. Collapsing some, but not all, dimensions of an input tensor that includes dynamic dimensions. The layers involved are:
-    - `Shape`: to get the input shape.
-    - `Gather`: to get the first 2 dimensions of the input shape.
-    - `Gather`: to get the last 2 dimensions of the input shape.
-    - `ReduceProd`: to compute the volume of the last 2 dimensions.
-    - `Concat`: to combine the first dimension of the original shape with the volume of the other dimensions.
-    - `Reshape`: to reshape the input based on the computed shape.
+具体包括以下两种常见操作：
+
+1. 对动态形状的输入张量进行展平。涉及的步骤：
+    - 使用 `Shape` 获取输入张量的形状。
+    - 使用 `ReduceProd` 计算输入形状的体积（所有维度的乘积）。
+    - 使用 `Reshape` 将输入重新调整为计算出的体积大小。
+
+2. 压缩输入张量的部分维度。涉及的步骤：
+    - 使用 `Shape` 获取输入的形状。
+    - 使用 `Gather` 提取输入形状的前 2 个维度。
+    - 使用 `Gather` 提取输入形状的最后 2 个维度。
+    - 使用 `ReduceProd` 计算最后 2 个维度的乘积。
+    - 使用 `Concat` 将原始形状的前几个维度与压缩后的维度组合起来。
+    - 使用 `Reshape` 重新调整输入形状。
+
+在深度学习和数据处理中，`ReduceProd` 和 `Gather` 操作非常关键，`ReduceProd` 用于计算乘积以简化数据，`Gather` 用于基于索引重新组织数据，这两者在许多应用场景中都有广泛用途。
+
+## 示例运行步骤
+
+1. 通过以下命令生成模型，并将其保存为 `model.onnx`：
+    ```bash
+    python3 generate.py
+    ```
+
+    生成的模型结构如下：
+
+    ![../resources/09_model.onnx.png](../resources/09_model.onnx.png)
 
 `ReduceProd`和`Gather`算子在深度学习和数据处理中扮演重要角色，分别提供了乘法归约和基于索引的数据选取功能。`ReduceProd`通过计算乘积来简化数据，而`Gather`则允许复杂的基于索引的数据重组，这两种操作在不同的场景下都非常有用。
 

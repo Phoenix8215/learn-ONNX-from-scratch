@@ -26,6 +26,9 @@ W = gs.Constant(name="W", values=np.ones(shape=(5, 3, 3, 3), dtype=np.float32))
 
 Y = gs.Variable(name="Y", dtype=np.float32, shape=(1, 5, 222, 222))
 
+'''
+output shape = (224 - 3 + 2 * 0) / 1 + 1
+'''
 node = gs.Node(op="Conv", inputs=[X, W], outputs=[Y])
 
 # Note that initializers do not necessarily have to be graph inputs

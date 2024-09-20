@@ -1,22 +1,22 @@
-# Creating An ONNX Model
 
-## Introduction
 
-ONNX GraphSurgeon includes an [IR (intermediate representation)](../../README.md#ir)
-that can be exported to ONNX. Additionally, the IR exposes a simple API so that it is
-possible to build graphs manually.
+# 创建 ONNX 模型
 
-This example creates an ONNX model containing a single GlobalLpPool node.
+## 概述
 
-## Running the example
+ONNX GraphSurgeon 提供了一个中间表示（IR），可以直接导出为 ONNX 格式。此外，IR 还带有一个简便的 API，方便用户手动构建模型图。
 
-Generate the model and save it to `test_globallppool.onnx` by running:
+在本示例中，我们将生成一个包含 GlobalLpPool 节点的 ONNX 模型。
+
+## 示例运行
+
+执行以下命令生成模型，并将其保存为 `test_globallppool.onnx` 文件：
 
 ```bash
 python3 example.py
 ```
 
-The generated model will look like this:
+生成的模型结构如下：
 
 ![../resources/01_test_globallppool.onnx.png](../resources/01_test_globallppool.onnx.png)
 

@@ -19,38 +19,40 @@ import onnx_graphsurgeon as gs
 import onnx
 
 
-# Here we'll register a function to do all the subgraph-replacement heavy-lifting.
-# NOTE: Since registered functions are entirely reusable, it may be a good idea to
-# refactor them into a separate module so you can use them across all your models.
+# 在这里我们注册一个函数来处理所有子图替换的工作。
+# 注意：由于注册的函数是完全可重用的，因此将它们重构到一个独立的模块中，
+# 这样你可以在所有模型中使用它们。
 @gs.Graph.register()
 def replace_with_clip(self, inputs, outputs):
-    # Disconnect output nodes of all input tensors
-    # inputs 是Tensor类型
+    # 断开所有输入张量的输出节点
+    # inputs 是 Tensor 类型
     for inp in inputs:
         inp.outputs.clear()
 
-    # Disconnet input nodes of all output tensors
+    # 断开所有输出张量的输入节点
     for out in outputs:
         out.inputs.clear()
 
-    # Insert the new node.
+    # 插入新节点。
     return self.layer(op="Clip", inputs=inputs, outputs=outputs)
 
 
-# Now we'll do the actual replacement
+# 现在我们进行实际的替换
 graph = gs.import_onnx(onnx.load("model.onnx"))
 
 tmap = graph.tensors()
-# You can figure out the input and output tensors using Netron. In our case:
-# Inputs: [inp, MIN_VAL, MAX_VAL]
-# Outputs: [max_out]
+# 你可以通过 Netron 确定输入和输出张量。在我们的例子中：
+# 输入: [inp, MIN_VAL, MAX_VAL]
+# 输出: [max_out]
 inputs = [tmap["identity_out_0"], tmap["onnx_graphsurgeon_constant_5"], tmap["onnx_graphsurgeon_constant_2"]]
+# inputs = [tmap["identity_out_0"], tmap["onnx_graphsurgeon_constant_2"]]
 outputs = [tmap["max_out_6"]]
 
 graph.replace_with_clip(inputs, outputs)
 
-# Remove the now-dangling subgraph.
+# 移除现在已经悬空的子图。
 graph.cleanup().toposort()
 
-# That's it!
+# 完成！
 onnx.save(gs.export_onnx(graph), "replaced.onnx")
+
