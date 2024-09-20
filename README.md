@@ -3,7 +3,7 @@
 
 🥰代表一些知识点的简介，🚀代表实战案例，❗代表一些tips
 
-still work in progress!!!还在施工中!!!
+WIP！！！
 ## ONNX部分
 
 1. [1.generate-onnx](1.generate-onnx)初步尝试：导出三个简单的onnx模型(两个输出头|动态shape) 
